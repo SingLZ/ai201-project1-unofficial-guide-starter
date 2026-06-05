@@ -13,7 +13,7 @@
      Why is this knowledge valuable, and why is it hard to find through official channels?
      Example: "Student reviews of CS professors at [university] — useful because official
      course descriptions don't reflect teaching style, exam difficulty, or workload." -->
-
+South San Jose rental housing information is spread across apartment review sites, Reddit threads, university housing pages, and rental listing platforms. It is hard to find reliable advice in one place because official apartment pages usually emphasize amenities, while renter experiences about parking, safety, noise, pests, management, and commute quality are scattered across informal discussions and review pages.
 ---
 
 ## Document Sources
@@ -22,18 +22,18 @@
      Be specific: include URLs, subreddit names, forum thread titles, or file names.
      Aim for variety — sources that together cover different subtopics or perspectives. -->
 
-| # | Source | Type | URL or file path |
-|---|--------|------|-----------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
-| 10 | | | |
+| #  | Source                                                                           | Type                             | URL or file path                                                                                        |
+| -- | -------------------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| 1  | Reddit / r/SanJose — “1b1b Apartment Recommendations near south San Jose”        | Reddit thread                    | `https://www.reddit.com/r/SanJose/comments/1j0k6gn/1b1b_apartment_recommendations_near_south_san_jose/` |
+| 2  | Reddit / r/SanJose — “2 bedroom 2 bath Apartment Recommendations South San Jose” | Reddit thread                    | `https://www.reddit.com/r/SanJose/comments/1m0s17v/2_bedroom_2_bath_apartment_recommendations_south/`   |
+| 3  | Reddit / r/SanJose — “Recommended neighborhoods to rent an apartment?”           | Reddit thread                    | `https://www.reddit.com/r/SanJose/comments/1s39tcf/recommended_neighborhoods_to_rent_an_apartment/`     |
+| 4  | Reddit / r/SanJose — “Any apartment complexes that don’t suck?”                  | Reddit thread                    | `https://www.reddit.com/r/SanJose/comments/zfdbmt/any_apartment_complexes_that_dont_suck/`              |
+| 5  | Reddit / r/SanJose — “Apartment Reviews Advice”                                  | Reddit thread                    | `https://www.reddit.com/r/SanJose/comments/vxoux5/apartment_reviews_advice/`                            |
+| 6  | Reddit / r/SanJose — “Apartments that are Modern and Safe?”                      | Reddit thread                    | `https://www.reddit.com/r/SanJose/comments/1fu57xx/apartments_that_are_modern_and_safe/`                |
+| 7  | San José State University — Off Campus Housing Resources                         | University housing resource page | `https://www.sjsu.edu/housing/how-we-can-help/off-campus-housing-resources.php`                         |
+| 8  | Apartments.com — “5 Best Neighborhoods in San Jose, CA for Renters”              | Neighborhood guide               | `https://www.apartments.com/blog/best-neighborhoods-in-san-jose-for-renters`                            |
+| 9  | Apartments.com — Santa Teresa Apartments, San Jose, CA                           | Apartment listing / reviews page | `https://www.apartments.com/santa-teresa-apartments-san-jose-ca/0tn5k10/`                               |
+| 10 | Apartments.com — The Woods Apartments, San Jose, CA                              | Apartment listing / reviews page | `https://www.apartments.com/the-woods-apartments-san-jose-ca/75d8npw/`                                  |
 
 ---
 
