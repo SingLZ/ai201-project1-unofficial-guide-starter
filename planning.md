@@ -10,7 +10,7 @@
 ## Domain
 
 <!-- What domain did you choose? Why is this knowledge valuable and hard to find through official channels? -->
-
+South San Jose rental housing information is spread across apartment review sites, Reddit threads, university housing pages, and rental listing platforms. It is hard to find reliable advice in one place because official apartment pages usually emphasize amenities, while renter experiences about parking, safety, noise, pests, management, and commute quality are scattered across informal discussions and review pages.
 ---
 
 ## Documents
@@ -18,18 +18,18 @@
 <!-- List your specific sources: URLs, subreddit names, forum threads, or file descriptions.
      Aim for at least 10 sources that together cover different subtopics or perspectives within your domain. -->
 
-| # | Source | Description | URL or location |
-|---|--------|-------------|-----------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
-| 10 | | | |
+| #  | Source                                                                           | Type                             | URL or file path                                                                                        |
+| -- | -------------------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| 1  | Reddit / r/SanJose — “1b1b Apartment Recommendations near south San Jose”        | Reddit thread                    | `https://www.reddit.com/r/SanJose/comments/1j0k6gn/1b1b_apartment_recommendations_near_south_san_jose/` |
+| 2  | Reddit / r/SanJose — “2 bedroom 2 bath Apartment Recommendations South San Jose” | Reddit thread                    | `https://www.reddit.com/r/SanJose/comments/1m0s17v/2_bedroom_2_bath_apartment_recommendations_south/`   |
+| 3  | Reddit / r/SanJose — “Recommended neighborhoods to rent an apartment?”           | Reddit thread                    | `https://www.reddit.com/r/SanJose/comments/1s39tcf/recommended_neighborhoods_to_rent_an_apartment/`     |
+| 4  | Reddit / r/SanJose — “Any apartment complexes that don’t suck?”                  | Reddit thread                    | `https://www.reddit.com/r/SanJose/comments/zfdbmt/any_apartment_complexes_that_dont_suck/`              |
+| 5  | Reddit / r/SanJose — “Apartment Reviews Advice”                                  | Reddit thread                    | `https://www.reddit.com/r/SanJose/comments/vxoux5/apartment_reviews_advice/`                            |
+| 6  | Reddit / r/SanJose — “Apartments that are Modern and Safe?”                      | Reddit thread                    | `https://www.reddit.com/r/SanJose/comments/1fu57xx/apartments_that_are_modern_and_safe/`                |
+| 7  | San José State University — Off Campus Housing Resources                         | University housing resource page | `https://www.sjsu.edu/housing/how-we-can-help/off-campus-housing-resources.php`                         |
+| 8  | Apartments.com — “5 Best Neighborhoods in San Jose, CA for Renters”              | Neighborhood guide               | `https://www.apartments.com/blog/best-neighborhoods-in-san-jose-for-renters`                            |
+| 9  | Apartments.com — Santa Teresa Apartments, San Jose, CA                           | Apartment listing / reviews page | `https://www.apartments.com/santa-teresa-apartments-san-jose-ca/0tn5k10/`                               |
+| 10 | Apartments.com — The Woods Apartments, San Jose, CA                              | Apartment listing / reviews page | `https://www.apartments.com/the-woods-apartments-san-jose-ca/75d8npw/`                                  |
 
 ---
 
@@ -41,11 +41,15 @@
      A review-heavy corpus warrants different chunking than a long FAQ. -->
 
 **Chunk size:**
+Around 300–500 tokens per chunk for longer pages or guides. For Reddit comments and short apartment reviews, I will keep each review/comment as its own chunk when possible, even if it is shorter than 300 tokens.
 
 **Overlap:**
+Around 50 tokens of overlap for longer pages. For short reviews or Reddit comments, I will use little to no overlap because each comment usually stands on its own.
 
 **Reasoning:**
+My documents are mostly renter reviews, Reddit threads, apartment listing pages, and housing resource pages. Since many useful details are short and opinion-based, such as safety, parking, rent, bugs, noise, commute, or management quality, very large chunks could mix too many unrelated opinions together and make retrieval less accurate.
 
+For long pages like apartment listings or university housing resources, 300–500 tokens is large enough to keep related information together, such as amenities, neighborhood details, or application advice. The 50-token overlap helps when a useful fact is split between two nearby paragraphs, so the retriever can still find enough context. If chunks are too small, search results may miss the full meaning of a renter’s complaint or recommendation. If chunks are too large, results may include too much unrelated information, such as rent, amenities, and reviews all mixed together.
 ---
 
 ## Retrieval Approach
@@ -57,10 +61,15 @@
      support, accuracy on domain-specific text, latency? -->
 
 **Embedding model:**
+I will use all-MiniLM-L6-v2 via sentence-transformers. This is a good choice for a small project because it is lightweight, fast, and strong enough for semantic search over short renter reviews, Reddit comments, and housing guide text.
 
 **Top-k:**
+I will retrieve the top 5 chunks per query. This should give the LLM enough context to compare multiple renter experiences without overwhelming it with too much repeated or unrelated information.
 
 **Production tradeoff reflection:**
+If this were deployed for real users and cost was not a constraint, I would consider using a stronger embedding model with better accuracy and longer context support. Since housing advice often depends on opinion-based language, a stronger model could better connect queries like “Is this area safe at night?” with chunks mentioning car break-ins, lighting, noise, or uncomfortable walking conditions, even if the exact word “safe” does not appear.
+
+I would also consider whether the model supports multilingual queries, because some users may search in Chinese or another language while the documents are mostly in English. The main tradeoff is that larger embedding models usually improve retrieval quality but cost more, use more memory, and add latency. For this project, top-k = 5 and all-MiniLM-L6-v2 are a practical balance between speed, simplicity, and useful retrieval quality.
 
 ---
 
@@ -71,13 +80,15 @@
      is right or wrong. "What are good dining halls?" is too vague.
      "What do students say about wait times at [dining hall name] during lunch?" is testable. -->
 
-| # | Question | Expected answer |
-|---|----------|-----------------|
-| 1 | | |
-| 2 | | |
-| 3 | | |
-| 4 | | |
-| 5 | | |
+| # | Question                                                                                                  | Expected answer                                                                                                                                                                                                                                        |
+| - | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1 | For the 1B/1B South San Jose apartment search, what budget does the Reddit poster mention?                | The answer should state that the poster’s budget is around **$3.5k** for a 1B/1B apartment near South San Jose.                                                                                                                                        |
+| 2 | In the South San Jose 2B/2B apartment thread, what commute-related locations are mentioned by the poster? | The answer should mention that one person works in **Mountain View** and the other needs to travel toward **Monterey**, so they are considering the **Santa Teresa / South San Jose** area.                                                            |
+| 3 | According to the Santa Teresa Apartments listing, what bedroom options are available?                     | The answer should state that Santa Teresa Apartments has **one-, two-, and three-bedroom** apartment options.                                                                                                                                          |
+| 4 | According to the Santa Teresa Apartments listing, is parking available?                                   | The answer should state that **parking is available**, but fees or details may vary and the renter should contact the property for exact parking terms.                                                                                                |
+| 5 | What is the difference between using Reddit threads and apartment listing pages in this housing guide?    | The answer should say that Reddit threads provide informal renter opinions, concerns, and recommendations, while apartment listing pages provide structured facts such as rent range, bedroom options, amenities, pet policy, and parking information. |
+
+
 
 ---
 
@@ -87,9 +98,11 @@
      Consider: noisy or inconsistent documents, missing source attribution, off-topic
      retrieval, chunks that split key information across boundaries. -->
 
-1.
+1. Noisy and inconsistent renter opinions.
+Reddit comments and apartment reviews may disagree with each other because renters have different budgets, safety expectations, commute needs, and experiences with management. One person may describe a complex as safe and quiet, while another may complain about theft, noise, or maintenance. The system needs to avoid treating one opinion as a universal fact.
 
-2.
+2. Off-topic or overly broad retrieval.
+Some sources may discuss San Jose generally instead of South San Jose specifically. If the query asks about South San Jose housing, the retriever might still return chunks about downtown, North San Jose, or general Bay Area rent. This could make the answer less useful unless the system checks whether the retrieved chunk is actually relevant.
 
 ---
 
@@ -100,7 +113,19 @@
      Label each stage with the tool or library you're using.
      You can use ASCII art, a Mermaid diagram, or embed a sketch as an image.
      You'll use this diagram as context when prompting AI tools to implement each stage. -->
-
+```mermaid
+graph LR
+    A["Document Ingestion<br/>Python requests /<br/>saved HTML or text files"] --> B["Chunking<br/>Custom chunk_text<br/>function<br/>300-500 tokens,<br/>50-token overlap"]
+    B --> C["Embedding + Vector Store<br/>sentence-transformers<br/>all-MiniLM-L6-v2<br/>FAISS or Chroma"]
+    C --> D["Retrieval<br/>Semantic search<br/>top-k = 5 chunks"]
+    D --> E["Generation<br/>LLM answer with<br/>source attribution"]
+    
+    style A fill:#1a1a1a,color:#fff
+    style B fill:#1a1a1a,color:#fff
+    style C fill:#1a1a1a,color:#fff
+    style D fill:#1a1a1a,color:#fff
+    style E fill:#1a1a1a,color:#fff
+```
 ---
 
 ## AI Tool Plan
@@ -116,7 +141,10 @@
      with my specified chunk size and overlap" is a plan. -->
 
 **Milestone 3 — Ingestion and chunking:**
+I plan to use ChatGPT to help implement document loading and chunking. I will give it my Document Sources section, Chunking Strategy section, and the requirement that longer pages should use 300–500 token chunks with about 50 tokens of overlap, while short Reddit comments or apartment reviews should stay as individual chunks when possible. I expect it to produce a load_documents() function and a chunk_text() function that keep metadata such as source title, URL, document type, and chunk number. I will verify it by checking that the output chunks are not too short, not too large, and still include the correct source URL.
 
 **Milestone 4 — Embedding and retrieval:**
+I plan to use ChatGPT to help implement embeddings and vector search. I will give it my Retrieval Approach section, especially the model choice all-MiniLM-L6-v2, the top-k = 5 setting, and the metadata fields from Milestone 3. I expect it to produce code that embeds each chunk, stores the vectors in a local vector store such as FAISS or Chroma, and retrieves the top 5 most relevant chunks for a user query. I will verify it using the five evaluation questions above and check whether the retrieved chunks actually mention the expected topics.
 
 **Milestone 5 — Generation and interface:**
+I plan to use ChatGPT to help design the answer-generation prompt and simple user interface. I will give it the Evaluation Plan, Anticipated Challenges, and Architecture sections, along with the requirement that the answer should use only retrieved chunks and include source attribution. I expect it to produce a prompt template that tells the LLM to answer housing questions, cite the retrieved source titles or URLs, and say when the documents do not contain enough evidence. I will verify it by asking the five test questions and checking whether the answers are specific, grounded in the retrieved documents, and not based on unsupported assumptions.
