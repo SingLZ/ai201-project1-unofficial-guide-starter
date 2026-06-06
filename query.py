@@ -12,6 +12,7 @@ import chromadb
 from dotenv import load_dotenv
 from groq import Groq
 from sentence_transformers import SentenceTransformer
+import re
 
 
 CHROMA_DIR = Path("data/chroma")
@@ -164,8 +165,9 @@ def build_prompt(question: str, chunks: list[RetrievedChunk]) -> list[dict[str, 
     user_prompt = (
         f"Question:\n{question}\n\n"
         f"Retrieved document chunks:\n{context}\n\n"
-        "Answer format:\n"
-        "Answer: <grounded answer with source labels>\n"
+        "Write a concise grounded answer in plain text. "
+        "Include source labels like [S1] or [S2] when using facts. "
+        "Do not start the response with 'Answer:'.\n"
     )
 
     return [
@@ -182,7 +184,10 @@ def unique_sources(chunks: list[RetrievedChunk]) -> list[str]:
         title = str(chunk.metadata.get("source_title", "Unknown source"))
         url = str(chunk.metadata.get("url", ""))
         chunk_index = chunk.metadata.get("chunk_index", "")
-        item = f"{title} | chunk {chunk_index} | distance {chunk.distance:.4f} | {url}"
+        item = (
+                f"[S{chunk.rank}] {title} | chunk {chunk_index} | "
+                f"distance {chunk.distance:.4f} | {url}"
+            )
 
         if item not in seen:
             sources.append(item)
@@ -222,11 +227,14 @@ def ask(question: str, top_k: int = TOP_K) -> dict[str, Any]:
 
     answer = completion.choices[0].message.content or ""
     answer = answer.strip()
+    answer = re.sub(r"^\s*Answer:\s*", "", answer, flags=re.IGNORECASE)
 
     if not answer:
         answer = "I don't have enough information on that from the collected documents."
 
-    if chunks and "[S" not in answer:
+    decline_text = "I don't have enough information on that from the collected documents."
+
+    if answer != decline_text and chunks and "[S" not in answer:
         answer = (
             f"{answer}\n\n"
             "Sources used: "
