@@ -4,6 +4,7 @@ groq==0.15.0
 python-dotenv==1.0.1
 requests
 beautifulsoup4
+gradio>=6.9.0
 
 # Query interface — add whichever you use for Milestone 5:
 # gradio>=6.9.0
