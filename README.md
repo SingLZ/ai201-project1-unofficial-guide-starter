@@ -210,3 +210,92 @@ For example, asking about Santa Teresa bedroom options works best with the apart
 Test Questions: 
 - What apartment issues should renters check before signing a lease?
 - What are the pros and cons of living in South San Jose?
+
+## Sample Chunks
+
+### Sample Chunk 1
+**Source:** Reddit / r/SanJose — 1b1b Apartment Recommendations near south San Jose  
+**Chunk ID:** `source-1-chunk-0`  
+**Text:**  
+The poster is a new graduate moving to the San Jose area and looking for a 1B/1B apartment near South San Jose. Their budget is around $3.5k, and they want somewhere safe with convenient grocery access.
+
+### Sample Chunk 2
+**Source:** Reddit / r/SanJose — 2 bedroom 2 bath Apartment Recommendations South San Jose  
+**Chunk ID:** `source-2-chunk-0`  
+**Text:**  
+The poster and spouse are moving to San Jose in early August. One person works in Mountain View and the other travels to Monterey almost every day, so they are considering a 2 bed / 2 bath apartment around Santa Teresa. Their budget is about $4.5k all inclusive except electricity and internet.
+
+### Sample Chunk 3
+**Source:** Apartments.com — Santa Teresa Apartments, San Jose, CA  
+**Chunk ID:** `source-9-chunk-0`  
+**Text:**  
+Santa Teresa Apartments is listed at 6254 Santa Teresa Blvd, San Jose, CA 95119. Bedroom options are listed as 1 to 3 bedrooms. The page lists one-bedroom, two-bedroom, and three-bedroom floor plan categories.
+
+### Sample Chunk 4
+**Source:** San José State University — Off Campus Housing Resources  
+**Chunk ID:** `source-7-chunk-0`  
+**Text:**  
+San José State University provides off-campus housing information as an informational resource. Tenant-landlord agreements are the responsibility of the tenant and landlord.
+
+### Sample Chunk 5
+**Source:** Apartments.com — 5 Best Neighborhoods in San Jose, CA for Renters  
+**Chunk ID:** `source-8-chunk-0`  
+**Text:**  
+South San Jose is described as quieter and more residential than downtown areas. It is connected to outdoor access, shopping, and apartment communities with amenities, but it is more car-dependent than more central neighborhoods.
+
+
+## Retrieval Test Results
+
+### Query 1
+**Query:** What is the estimated budget for 1B1B in San Jose?  
+**Top returned chunk:** `source-1-chunk-0`  
+**Source:** Reddit / r/SanJose — 1b1b Apartment Recommendations near south San Jose  
+**Why relevant:** This chunk directly states that the poster is looking for a 1B/1B near South San Jose with a budget around $3.5k.
+
+### Query 2
+**Query:** What is the estimated budget for 2B2B in San Jose?  
+**Top returned chunk:** `source-2-chunk-0`  
+**Source:** Reddit / r/SanJose — 2 bedroom 2 bath Apartment Recommendations South San Jose  
+**Why relevant:** This chunk directly states the 2B/2B budget as about $4.5k all inclusive except electricity and internet.
+
+### Query 3
+**Query:** In Santa Teresa Apartments listing, what bedroom options are available?  
+**Top returned chunk:** `source-9-chunk-0`  
+**Source:** Apartments.com — Santa Teresa Apartments, San Jose, CA  
+**Why relevant:** This chunk directly lists bedroom options as 1 to 3 bedrooms and mentions one-, two-, and three-bedroom floor plan categories.
+
+
+## Example Responses
+
+### Example 1
+**Question:** What is the estimated budget for 1B1B in San Jose?  
+**Answer:** The estimated 1B/1B budget in the South San Jose Reddit source is around $3.5k per month [S1].  
+**Retrieved from:** Reddit / r/SanJose — 1b1b Apartment Recommendations near south San Jose.
+
+### Example 2
+**Question:** In Santa Teresa Apartments listing, what bedroom options are available?  
+**Answer:** Santa Teresa Apartments lists 1 to 3 bedroom options, including one-bedroom, two-bedroom, and three-bedroom floor plan categories [S1].  
+**Retrieved from:** Apartments.com — Santa Teresa Apartments, San Jose, CA.
+
+### Out-of-scope / refusal example
+**Question:** What are the best apartments in New York City?  
+**Answer:** I don't have enough information on that from the collected documents.  
+**Reason:** The document collection is about South San Jose housing, not New York City apartments.
+
+## Query Interface
+
+The project uses a Gradio web interface. The user enters a housing question into the text box, optionally selects a source filter, and clicks Ask. The output includes a grounded answer and a separate “Retrieved from” box showing source titles, chunk numbers, distance scores, and URLs.
+
+### Input fields
+- **Your question:** free-text housing question
+- **Source filter:** All sources, Reddit thread, Apartment listing / reviews page, University housing resource page, or Neighborhood guide
+
+### Output fields
+- **Answer:** generated grounded answer
+- **Retrieved from:** source documents and retrieved chunk information
+
+### Sample interaction
+**Question:** What is the estimated budget for 1B1B in San Jose?  
+**Source filter:** All sources  
+**Answer:** The estimated budget for 1B/1B in the South San Jose Reddit source is around $3.5k per month [S1].  
+**Retrieved from:** Reddit / r/SanJose — 1b1b Apartment Recommendations near south San Jose.
