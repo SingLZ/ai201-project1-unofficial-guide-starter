@@ -60,6 +60,7 @@ For long pages like apartment listings or university housing resources, 300–50
 
 **Final chunk count:**
 The final chunk count was **95 chunks** across **10 documents**.
+
 ---
 
 ## Embedding Model
@@ -74,7 +75,9 @@ The final chunk count was **95 chunks** across **10 documents**.
 I will use all-MiniLM-L6-v2 via sentence-transformers. This is a good choice for a small project because it is lightweight, fast, and strong enough for semantic search over short renter reviews, Reddit comments, and housing guide text.
 
 **Production tradeoff reflection:**
-If this were deployed for real users and cost was not a constraint, I would consider using a stronger embedding model with better accuracy and longer context support. Since housing advice often depends on opinion-based language, a stronger model could better connect queries like “Is this area safe at night?” with chunks mentioning car break-ins, lighting, noise, or uncomfortable walking conditions, even if the exact word “safe” does not appear. I would also consider whether the model supports multilingual queries, because some users may search in Chinese or another language while the documents are mostly in English. The main tradeoff is that larger embedding models usually improve retrieval quality but cost more, use more memory, and add latency. For this project, top-k = 5 and all-MiniLM-L6-v2 are a practical balance between speed, simplicity, and useful retrieval quality.
+If this were deployed for real users and cost was not a constraint, I would consider using a stronger embedding model with better accuracy and longer context support. Since housing advice often depends on opinion-based language, a stronger model could better connect queries like “Is this area safe at night?” with chunks mentioning car break-ins, lighting, noise, or uncomfortable walking conditions, even if the exact word “safe” does not appear.
+
+I would also consider whether the model supports multilingual queries, because some users may search in Chinese or another language while the documents are mostly in English. The main tradeoff is that larger embedding models usually improve retrieval quality but cost more, use more memory, and add latency. For this project, top-k = 5 and all-MiniLM-L6-v2 are a practical balance between speed, simplicity, and useful retrieval quality.
 
 ---
 
@@ -143,6 +146,7 @@ This was mainly a document coverage issue in the ingestion stage, not a retrieva
 
 **What you would change to fix it:**
 I would improve the source collection step by adding more complete parking-policy information to data/sources/source9.txt, if that information is available from the original Santa Teresa Apartments listing. Then I would rerun ingestion, chunking, embedding, and retrieval so the vector store contains a chunk that directly answers parking availability. I would not fix this by loosening the generation prompt, because that would make the system less grounded.
+
 ---
 
 ## Spec Reflection
@@ -155,6 +159,7 @@ The spec helped by forcing the system into separate pipeline stages: document in
 
 **One way your implementation diverged from the spec, and why:**
 My original plan was to scrape several source URLs directly, including Reddit and Apartments.com pages. In practice, multiple pages blocked automated requests with HTTP 403 errors, so I changed the ingestion approach to use local .txt files under data/sources/. This still followed the project requirement because the system loads collected documents from disk, but it made the pipeline more stable and easier to reproduce for grading.
+
 ---
 
 ## AI Usage
