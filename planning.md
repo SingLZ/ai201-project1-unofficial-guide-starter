@@ -148,3 +148,9 @@ I plan to use ChatGPT to help implement embeddings and vector search. I will giv
 
 **Milestone 5 — Generation and interface:**
 I plan to use ChatGPT to help design the answer-generation prompt and simple user interface. I will give it the Evaluation Plan, Anticipated Challenges, and Architecture sections, along with the requirement that the answer should use only retrieved chunks and include source attribution. I expect it to produce a prompt template that tells the LLM to answer housing questions, cite the retrieved source titles or URLs, and say when the documents do not contain enough evidence. I will verify it by asking the five test questions and checking whether the answers are specific, grounded in the retrieved documents, and not based on unsupported assumptions.
+
+## Stretch Feature Plan — Metadata Filtering
+
+For the stretch feature, I plan to add metadata filtering to the query interface. Users will be able to choose whether retrieval searches all documents or only a specific source type, such as Reddit threads, apartment listing pages, university housing resources, or neighborhood guides.
+
+This fits my corpus because different source types answer different kinds of questions. Reddit threads are better for renter opinions, warnings, and lived experiences, while apartment listing pages are better for structured facts such as rent range, bedroom options, amenities, and policies. Filtering by source type lets users control what kind of evidence the system retrieves before generation.

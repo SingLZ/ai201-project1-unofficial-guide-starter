@@ -73,7 +73,11 @@ def get_collection():
     return client.get_collection(name=COLLECTION_NAME)
 
 
-def retrieve(query: str, top_k: int = TOP_K) -> list[RetrievedChunk]:
+def retrieve(
+    query: str,
+    top_k: int = TOP_K,
+    source_type_filter: str | None = None,
+    ) -> list[RetrievedChunk]:
     question = query.strip()
 
     if not question:
@@ -87,9 +91,16 @@ def retrieve(query: str, top_k: int = TOP_K) -> list[RetrievedChunk]:
     ).tolist()
 
     collection = get_collection()
+
+    where_filter = None
+
+    if source_type_filter and source_type_filter != "All sources":
+        where_filter = {"source_type": source_type_filter}
+
     result = collection.query(
         query_embeddings=query_embedding,
         n_results=top_k,
+        where=where_filter,
         include=["documents", "metadatas", "distances"],
     )
 
@@ -196,7 +207,11 @@ def unique_sources(chunks: list[RetrievedChunk]) -> list[str]:
     return sources
 
 
-def ask(question: str, top_k: int = TOP_K) -> dict[str, Any]:
+def ask(
+        question: str,
+        top_k: int = TOP_K,
+        source_type_filter: str | None = None,
+    ) -> dict[str, Any]:
     clean_question = question.strip()
 
     if not clean_question:
@@ -206,7 +221,11 @@ def ask(question: str, top_k: int = TOP_K) -> dict[str, Any]:
             "chunks": [],
         }
 
-    chunks = retrieve(clean_question, top_k=top_k)
+    chunks = retrieve(
+        clean_question,
+        top_k=top_k,
+        source_type_filter=source_type_filter,
+    )
 
     if should_decline(chunks):
         return {

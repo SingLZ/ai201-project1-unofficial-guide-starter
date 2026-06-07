@@ -198,3 +198,15 @@ It produced scripts/embed_and_retrieve.py, which loads data/chunks/chunks.jsonl,
 
 - *What I changed or overrode:*
 I verified the retrieval manually before moving to generation. The top results for the 1B/1B budget, 2B/2B budget, and Santa Teresa bedroom-options questions all retrieved the correct source chunks with distance scores under about 0.5. I kept the retrieval settings because the results were relevant.
+
+## Stretch Feature: Metadata Filtering
+
+I implemented metadata filtering as a stretch feature. The Gradio interface includes a source filter dropdown that lets the user search all documents or restrict retrieval to a specific source type: Reddit threads, apartment listing pages, university housing resources, or neighborhood guides.
+
+This feature is useful because each source type has different strengths. Reddit threads provide informal renter opinions and warnings, while apartment listing pages provide structured facts like bedroom options, rent ranges, and amenities. Filtering lets users control the kind of evidence used before the LLM generates an answer.
+
+For example, asking about Santa Teresa bedroom options works best with the apartment listing filter, while asking about renter concerns or neighborhood opinions works better with the Reddit thread filter.
+
+Test Questions: 
+- What apartment issues should renters check before signing a lease?
+- What are the pros and cons of living in South San Jose?

@@ -7,8 +7,8 @@ import gradio as gr
 from query import ask
 
 
-def handle_query(question: str) -> tuple[str, str]:
-    result = ask(question)
+def handle_query(question: str, source_filter: str) -> tuple[str, str]:
+    result = ask(question, source_type_filter=source_filter)
 
     sources = result.get("sources", [])
     source_text = "\n".join(f"• {source}" for source in sources)
@@ -32,13 +32,24 @@ with gr.Blocks(title="Unofficial South San Jose Housing Guide") as demo:
         lines=2,
     )
 
+    source_filter = gr.Dropdown(
+        label="Source filter",
+        choices=[
+            "All sources",
+            "Reddit thread",
+            "Apartment listing / reviews page",
+            "University housing resource page",
+            "Neighborhood guide",
+        ],
+        value="All sources",
+    )
     ask_button = gr.Button("Ask")
 
     answer = gr.Textbox(label="Answer", lines=8)
     sources = gr.Textbox(label="Retrieved from", lines=6)
 
-    ask_button.click(handle_query, inputs=question, outputs=[answer, sources])
-    question.submit(handle_query, inputs=question, outputs=[answer, sources])
+    ask_button.click(handle_query, inputs=[question, source_filter], outputs=[answer, sources])
+    question.submit(handle_query, inputs=[question, source_filter], outputs=[answer, sources])
 
 
 if __name__ == "__main__":
