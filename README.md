@@ -14,6 +14,7 @@
      Example: "Student reviews of CS professors at [university] — useful because official
      course descriptions don't reflect teaching style, exam difficulty, or workload." -->
 South San Jose rental housing information is spread across apartment review sites, Reddit threads, university housing pages, and rental listing platforms. It is hard to find reliable advice in one place because official apartment pages usually emphasize amenities, while renter experiences about parking, safety, noise, pests, management, and commute quality are scattered across informal discussions and review pages.
+
 ---
 
 ## Document Sources
@@ -73,22 +74,16 @@ The final chunk count was **95 chunks** across **10 documents**.
 I will use all-MiniLM-L6-v2 via sentence-transformers. This is a good choice for a small project because it is lightweight, fast, and strong enough for semantic search over short renter reviews, Reddit comments, and housing guide text.
 
 **Production tradeoff reflection:**
-If this were deployed for real users and cost was not a constraint, I would consider using a stronger embedding model with better accuracy and longer context support. Since housing advice often depends on opinion-based language, a stronger model could better connect queries like “Is this area safe at night?” with chunks mentioning car break-ins, lighting, noise, or uncomfortable walking conditions, even if the exact word “safe” does not appear.
+If this were deployed for real users and cost was not a constraint, I would consider using a stronger embedding model with better accuracy and longer context support. Since housing advice often depends on opinion-based language, a stronger model could better connect queries like “Is this area safe at night?” with chunks mentioning car break-ins, lighting, noise, or uncomfortable walking conditions, even if the exact word “safe” does not appear. I would also consider whether the model supports multilingual queries, because some users may search in Chinese or another language while the documents are mostly in English. The main tradeoff is that larger embedding models usually improve retrieval quality but cost more, use more memory, and add latency. For this project, top-k = 5 and all-MiniLM-L6-v2 are a practical balance between speed, simplicity, and useful retrieval quality.
 
-I would also consider whether the model supports multilingual queries, because some users may search in Chinese or another language while the documents are mostly in English. The main tradeoff is that larger embedding models usually improve retrieval quality but cost more, use more memory, and add latency. For this project, top-k = 5 and all-MiniLM-L6-v2 are a practical balance between speed, simplicity, and useful retrieval quality.
 ---
 
 ## Grounded Generation
 
-<!-- Explain how your system enforces grounding — how does it prevent the LLM from answering
-     beyond the retrieved documents?
-     Describe both your system prompt (what instruction you gave the model) and any structural
-     choices (e.g., how you formatted the context, whether you filtered low-relevance chunks).
-     Do not just say "I told it to use the documents" — show the actual instruction or explain
-     the mechanism. -->
-
 **System prompt grounding instruction:**
+
 My system prompt tells the LLM to answer only from the retrieved chunks and to decline if the retrieved documents do not contain enough information. The core instruction is:
+
 ```text
 You are a grounded RAG assistant for an unofficial South San Jose housing guide.
 Answer using ONLY the provided retrieved document chunks.
@@ -97,9 +92,12 @@ If the retrieved chunks do not explicitly contain the answer, say exactly:
 "I don't have enough information on that from the collected documents."
 When answering, cite the relevant source labels like [S1] or [S2].
 Do not invent apartment facts, prices, safety claims, policies, or recommendations.
+```
 
 **How source attribution is surfaced in the response:**
-Source attribution is surfaced in two ways. First, the prompt asks the model to cite retrieved chunks using labels like [S1] or [S2] inside the answer. Second, the Gradio interface programmatically displays a “Retrieved from” section showing the source title, chunk number, distance score, and URL for each retrieved chunk. This means source visibility does not depend only on the model remembering to cite correctly.
+
+Source attribution is surfaced in two ways. First, the prompt asks the model to cite retrieved chunks using labels like `[S1]` or `[S2]` inside the answer. Second, the Gradio interface programmatically displays a “Retrieved from” section showing the source title, chunk number, distance score, and URL for each retrieved chunk. This means source visibility does not depend only on the model remembering to cite correctly.
+
 ---
 
 ## Evaluation Report
@@ -113,8 +111,8 @@ Source attribution is surfaced in two ways. First, the prompt asks the model to 
 | 1 | What is the estimated budget for 1B1B in San Jose? | Around $3.5k for a 1B/1B South San Jose apartment. | The system answered around $3.5k and cited the South San Jose 1B/1B Reddit source. | Relevant | Accurate |
 | 2 | What is the estimated budget for 2B2B in San Jose? | Around $4.5k all-inclusive, except electricity and internet. | The system answered about $4.5k all-inclusive, excluding electricity and internet, and cited the 2B/2B South San Jose Reddit source. | Relevant | Accurate |
 | 3 | In Santa Teresa Apartments listing, what bedroom options are available? | Santa Teresa Apartments lists 1 to 3 bedrooms, including one-, two-, and three-bedroom floor plan categories. | The system answered that Santa Teresa Apartments lists 1 to 3 bedroom options. | Relevant | Accurate |
-| 4 | According to the Santa Teresa Apartments source, what should renters do to confirm parking or policy details? | Renters should check the current listing or contact the property directly. | The system answered that parking and policy details should be confirmed through the current listing or by contacting the property. | Relevant | Accurate |
-| 5 | According to the SJSU Off Campus Housing Resources page, who is responsible for tenant-landlord agreements? | Tenant-landlord agreements are the responsibility of the tenant and landlord. | The system answered that tenant-landlord agreements are the responsibility of the tenant and landlord, and SJSU’s page is informational. | Relevant | Accurate |
+| 4 | For the Santa Teresa Apartments, what should renters do to confirm parking or policy details? | Renters should check the current listing or contact the property directly. | The system answered that parking and policy details should be confirmed through the current listing or by contacting the property. | Relevant | Accurate |
+| 5 | For off campus housing, Who is responsible for tenant-landlord agreements? | Tenant-landlord agreements are the responsibility of the tenant and landlord. | The system answered that tenant-landlord agreements are the responsibility of the tenant and landlord, and SJSU’s page is informational. | Relevant | Accurate |
 
 **Retrieval quality:** Relevant / Partially relevant / Off-target  
 **Response accuracy:** Accurate / Partially accurate / Inaccurate
