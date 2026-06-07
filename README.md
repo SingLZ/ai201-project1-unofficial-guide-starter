@@ -109,13 +109,17 @@ Source attribution is surfaced in two ways. First, the prompt asks the model to 
      Be honest — a partially accurate or inaccurate result that you explain well is more
      valuable than a suspiciously perfect result. -->
 
-| # | Question | Expected answer | System response (summarized) | Retrieval quality | Response accuracy |
-|---|----------|-----------------|------------------------------|-------------------|-------------------|
-| 1 | What is the estimated budget for 1B1B in San Jose? | Around $3.5k for a 1B/1B South San Jose apartment. | The system answered around $3.5k and cited the South San Jose 1B/1B Reddit source. | Relevant | Accurate |
-| 2 | What is the estimated budget for 2B2B in San Jose? | Around $4.5k all-inclusive, except electricity and internet. | The system answered about $4.5k all-inclusive, excluding electricity and internet, and cited the 2B/2B South San Jose Reddit source. | Relevant | Accurate |
-| 3 | In Santa Teresa Apartments listing, what bedroom options are available? | Santa Teresa Apartments lists 1 to 3 bedrooms, including one-, two-, and three-bedroom floor plan categories. | The system answered that Santa Teresa Apartments lists 1 to 3 bedroom options. | Relevant | Accurate |
-| 4 | For the Santa Teresa Apartments, what should renters do to confirm parking or policy details? | Renters should check the current listing or contact the property directly. | The system answered that parking and policy details should be confirmed through the current listing or by contacting the property. | Relevant | Accurate |
-| 5 | For off campus housing, Who is responsible for tenant-landlord agreements? | Tenant-landlord agreements are the responsibility of the tenant and landlord. | The system answered that tenant-landlord agreements are the responsibility of the tenant and landlord, and SJSU’s page is informational. | Relevant | Accurate |
+## Evaluation Report
+
+| # | Question | Expected | System response | Retrieved chunks | Retrieval | Accuracy |
+|---|----------|----------|-----------------|------------------|-----------|----------|
+| 1 | What is the estimated budget for 1B1B in San Jose? | Around $3.5k. | Returned around $3.5k and cited the South San Jose 1B/1B Reddit source. | `source-1-chunk-0` from Reddit / r/SanJose — 1b1b Apartment Recommendations near south San Jose. | Relevant | Accurate |
+| 2 | What is the estimated budget for 2B2B in San Jose? | Around $4.5k all-inclusive, except electricity and internet. | Returned about $4.5k all-inclusive, excluding electricity and internet, and cited the 2B/2B Reddit source. | `source-2-chunk-0` from Reddit / r/SanJose — 2 bedroom 2 bath Apartment Recommendations South San Jose. | Relevant | Accurate |
+| 3 | In Santa Teresa Apartments listing, what bedroom options are available? | 1 to 3 bedrooms. | Returned that Santa Teresa Apartments lists 1 to 3 bedroom options. | `source-9-chunk-0` from Apartments.com — Santa Teresa Apartments, San Jose, CA. | Relevant | Accurate |
+| 4 | According to the Santa Teresa Apartments source, what should renters do to confirm parking or policy details? | Check the current listing or contact the property directly. | Returned that renters should check the current listing or contact the property directly. | `source-9-chunk-0` from Apartments.com — Santa Teresa Apartments, San Jose, CA. | Relevant | Accurate |
+| 5 | According to the SJSU Off Campus Housing Resources page, who is responsible for tenant-landlord agreements? | Tenant-landlord agreements are the responsibility of the tenant and landlord. | Returned that tenant-landlord agreements are the responsibility of the tenant and landlord, and that SJSU’s page is informational. | `source-7-chunk-0` from San José State University — Off Campus Housing Resources. | Relevant | Accurate |
+
+The system retrieved relevant chunks for all five planned evaluation questions. The strongest retrieval examples were the 1B/1B budget question, the 2B/2B budget question, and the Santa Teresa bedroom-options question because the top retrieved chunk directly contained the expected answer. The Santa Teresa parking-policy question was also relevant, but it showed a limitation in the collected source text: the document explains how to confirm parking details, but does not directly answer whether parking is available.
 
 **Retrieval quality:** Relevant / Partially relevant / Off-target  
 **Response accuracy:** Accurate / Partially accurate / Inaccurate
